@@ -4,7 +4,7 @@
 // Note that when running locally, in order to open a web page which uses modules, you must serve the directory over HTTP e.g. with https://www.npmjs.com/package/http-server
 // You can't open the index.html file using a file:// URL.
 
-import { getUserIds, addData, getData } from "./storage.js";
+import { getUserIds, addData, getData, clearData } from "./storage.js";
 
 document.getElementById("input-form").style.display = "none";
 
@@ -38,8 +38,8 @@ function addDataLocal(id){
     let datePicker = document.getElementById("datePicker");
     
     let userId = id;
-    let button = document.getElementById("btn")
-    button.addEventListener("submit", (e)=> {
+    let form = document.getElementById("input-form")
+    form.addEventListener("submit", (e)=> {
         e.preventDefault()
         document.getElementById("ul-list").innerHTML= "";
         
@@ -58,6 +58,7 @@ function displayList(id){
     let ulList = document.getElementById("ul-list");
     let userId = id;
     const receivedData = getData(userId);
+    let arrEvents = [];
     if(!receivedData){
         let li = document.createElement("li");
         li.innerHTML = "There is no agenda";
@@ -65,15 +66,46 @@ function displayList(id){
     }
     else{
         for(let i of receivedData){
-            let li = document.createElement("li");
-            li.innerHTML = `${i.topic} - ${i.date}`;
-            ulList.appendChild(li);
+            let li1 = document.createElement("li"); 
+            let originalDateSevenDays = new Date(i.date);
+            originalDateSevenDays.setDate(originalDateSevenDays.getDate() + 7);
+            let sevenDays = originalDateSevenDays.toISOString().split("T")[0];
+            li1.innerHTML = `${i.topic} - ${sevenDays}`;
+    
+            let li2 = document.createElement("li");
+            let originalDateOneMonth = new Date(i.date); // Convert to Date object
+            originalDateOneMonth.setMonth(originalDateOneMonth.getMonth() + 1); // Add 1 month
+            const oneMonth = originalDateOneMonth.toISOString().split("T")[0]; // Convert back to string
+            li2.innerHTML = `${i.topic} - ${oneMonth}`;
+    
+            let li3 = document.createElement("li");
+            let originalDateThreeMonth = new Date(i.date);
+            originalDateThreeMonth.setMonth(originalDateThreeMonth.getMonth() + 3);
+            const threeMonth = originalDateThreeMonth.toISOString().split("T")[0];
+            li3.innerHTML = `${i.topic} - ${threeMonth}`;
+    
+            let li4 = document.createElement("li");
+            let originalDateSixMonth = new Date(i.date);
+            originalDateSixMonth.setMonth(originalDateSixMonth.getMonth() + 6);
+            const sixMonth = originalDateSixMonth.toISOString().split("T")[0];
+            li4.innerHTML = `${i.topic} - ${sixMonth}`;
+    
+            let li5 = document.createElement("li");
+            let originalDateOneYear = new Date(i.date);
+            originalDateOneYear.setMonth(originalDateOneYear.getMonth() + 12);
+            const oneYear = originalDateOneYear.toISOString().split("T")[0];
+            li5.innerHTML = `${i.topic} - ${oneYear}`;
+            
+            let arrDates
+            
         }
+        ulList.append(li1, li2, li3 ,li4, li5);
     }
     
 }
 
 window.onload = function () {
+    //clearData(1)
     let datePickerDefault = document.getElementById("datePicker");
     datePickerDefault.value = new Date().toISOString().split('T')[0];
     dropDown()
