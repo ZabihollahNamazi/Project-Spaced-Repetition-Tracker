@@ -66,40 +66,40 @@ function displayList(id){
     }
     else{
         for(let i of receivedData){
-            let li1 = document.createElement("li"); 
             let originalDateSevenDays = new Date(i.date);
             originalDateSevenDays.setDate(originalDateSevenDays.getDate() + 7);
             let sevenDays = originalDateSevenDays.toISOString().split("T")[0];
-            li1.innerHTML = `${i.topic} - ${sevenDays}`;
     
-            let li2 = document.createElement("li");
             let originalDateOneMonth = new Date(i.date); // Convert to Date object
             originalDateOneMonth.setMonth(originalDateOneMonth.getMonth() + 1); // Add 1 month
             const oneMonth = originalDateOneMonth.toISOString().split("T")[0]; // Convert back to string
-            li2.innerHTML = `${i.topic} - ${oneMonth}`;
     
-            let li3 = document.createElement("li");
             let originalDateThreeMonth = new Date(i.date);
             originalDateThreeMonth.setMonth(originalDateThreeMonth.getMonth() + 3);
             const threeMonth = originalDateThreeMonth.toISOString().split("T")[0];
-            li3.innerHTML = `${i.topic} - ${threeMonth}`;
     
-            let li4 = document.createElement("li");
             let originalDateSixMonth = new Date(i.date);
             originalDateSixMonth.setMonth(originalDateSixMonth.getMonth() + 6);
             const sixMonth = originalDateSixMonth.toISOString().split("T")[0];
-            li4.innerHTML = `${i.topic} - ${sixMonth}`;
     
-            let li5 = document.createElement("li");
             let originalDateOneYear = new Date(i.date);
             originalDateOneYear.setMonth(originalDateOneYear.getMonth() + 12);
             const oneYear = originalDateOneYear.toISOString().split("T")[0];
-            li5.innerHTML = `${i.topic} - ${oneYear}`;
             
-            let arrDates
+            let arrDates = [sevenDays, oneMonth, threeMonth, sixMonth, oneYear];
+            for(let n in arrDates){
+                const newObject = {topic: i.topic, date: arrDates[n]}
+                arrEvents.push(newObject);
+            }
             
         }
-        ulList.append(li1, li2, li3 ,li4, li5);
+        // Sort by date in ascending order (earliest date first)
+        arrEvents.sort((a, b) => new Date(a.date) - new Date(b.date));
+        for(let j of arrEvents){
+            let li = document.createElement("li");
+            li.innerHTML = `${j.topic} - ${j.date}`;
+            ulList.append(li);
+        }
     }
     
 }
