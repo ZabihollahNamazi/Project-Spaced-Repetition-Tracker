@@ -9,20 +9,20 @@
         <select name="dropdown" id="dropdown">
             <option value="">-- Select a user --</option>  
         </select>
+    
     </form>
     <br>
     <hr width="40%" align="left">
-    <form action="">
+    <form action="" id="input-form">
         <label for="topic">Topic</label>
-        <input type="text" name="topic" id="topic">
+        <input type="text" name="topic" id="topic" required>
         <br>
         <label for="datePicker">Select A Date:</label>
-        <input type="date" name="datePicker" id="datePicker">
+        <input type="date" name="datePicker" id="datePicker" required>
         <br>
         <button type="submit" id="btn">Submit</button>
         <hr width="40%" align="left">
     </form>
-    <hr width="40%" align="left">
-    <ul id="ul-agendas-list"></ul>
+    <ul id="ul-list"></ul>
   </body>
 </html>
