@@ -4,5 +4,25 @@
     <script type="module" src="script.js"></script>
   </head>
   <body>
+    <form action="">
+        <label for="dropdown">Select a user to see their agendas :</label>
+        <select name="dropdown" id="dropdown">
+            <option value="">-- Select a user --</option>  
+        </select>
+    </form>
+    <br>
+    <hr width="40%" align="left">
+    <form action="">
+        <label for="topic">Topic</label>
+        <input type="text" name="topic" id="topic">
+        <br>
+        <label for="datePicker">Select A Date:</label>
+        <input type="date" name="datePicker" id="datePicker">
+        <br>
+        <button type="submit" id="btn">Submit</button>
+        <hr width="40%" align="left">
+    </form>
+    <hr width="40%" align="left">
+    <ul id="ul-agendas-list"></ul>
   </body>
 </html>
