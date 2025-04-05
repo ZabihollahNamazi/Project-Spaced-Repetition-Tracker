@@ -5,9 +5,11 @@
 // You can't open the index.html file using a file:// URL.
 
 import { getUserIds, addData, getData, clearData } from "./storage.js";
+import { dateFormat } from "./dateformat.js";
 
 document.getElementById("input-form").style.display = "none";
-
+let datePickerDefault = document.getElementById("datePicker");
+datePickerDefault.value = new Date().toISOString().split('T')[0];
 
 function dropDown(){
     const users = getUserIds();
@@ -96,19 +98,20 @@ function displayList(id){
         // Sort by date in ascending order (earliest date first)
         arrEvents.sort((a, b) => new Date(a.date) - new Date(b.date));
         for(let j of arrEvents){
-            let li = document.createElement("li");
-            li.innerHTML = `${j.topic} - ${j.date}`;
-            ulList.append(li);
+            console.log(j.date)
+            const today = new Date()
+            if(new Date(j.date) >= today){
+                let li = document.createElement("li");
+                li.innerHTML = `${j.topic} - ${dateFormat(j.date)}`;
+                ulList.append(li);
+            }
         }
     }
     
 }
 
 window.onload = function () {
-    //clearData(1)
-    let datePickerDefault = document.getElementById("datePicker");
-    datePickerDefault.value = new Date().toISOString().split('T')[0];
+    clearData()
+
     dropDown()
-    
-  //document.querySelector("body").innerText = `There are ${users.length} users`;
 };
