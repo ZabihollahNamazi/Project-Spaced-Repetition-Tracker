@@ -7,8 +7,9 @@
 import { getUserIds, addData, getData, clearData } from "./storage.js";
 import { dateFormat } from "./dateformat.js";
 
-document.getElementById("input-form").style.display = "none";
-let datePickerDefault = document.getElementById("datePicker");
+document.getElementById("input-form").style.display = "none"; // set form hide as default
+
+let datePickerDefault = document.getElementById("datePicker"); //set todays date as default in the date picker input
 datePickerDefault.value = new Date().toISOString().split('T')[0];
 
 function dropDown(){
@@ -22,7 +23,7 @@ function dropDown(){
         optionDropdown.innerHTML = `User ${users[i]}`;
         dropDownList.appendChild(optionDropdown);
     }
-    dropDownList.addEventListener("change", ()=>{
+    dropDownList.addEventListener("change", ()=>{ // when clicking on a user it shows their agendas
         document.getElementById("ul-list").innerHTML= "";
         document.getElementById("input-form").style.display = "block";
 
@@ -45,10 +46,10 @@ function addDataLocal(id){
         e.preventDefault()
         document.getElementById("ul-list").innerHTML= "";
         
-        let data = {topic: topic.value, date: datePicker.value}
+        let data = {topic: topic.value, date: datePicker.value} // getting topic and date and put them into data object
         console.log(data);
-        addData(userId, data);
-        displayList(userId);
+        addData(userId, data); // add data to local storage
+        displayList(userId); // with userId it gets data from local storage and display them as list if agendas
 
         topic.value = ""; // empty the topic input after adding
         datePicker.value = new Date().toISOString().split('T')[0]; // set as default date again
@@ -60,8 +61,8 @@ function displayList(id){
     let ulList = document.getElementById("ul-list");
     let userId = id;
     const receivedData = getData(userId);
-    let arrEvents = [];
-    if(!receivedData){
+    let arrEvents = []; // we use it in line 94 for pushing the revises dates into it
+    if(!receivedData){ // if receivedData from localStorage is empty then it shows to user that there is no agenda
         let li = document.createElement("li");
         li.innerHTML = "There is no agenda";
         ulList.appendChild(li);
@@ -69,7 +70,7 @@ function displayList(id){
     else{
         for(let i of receivedData){
             let originalDateSevenDays = new Date(i.date);
-            originalDateSevenDays.setDate(originalDateSevenDays.getDate() + 7);
+            originalDateSevenDays.setDate(originalDateSevenDays.getDate() + 7); // Add 7 days
             let sevenDays = originalDateSevenDays.toISOString().split("T")[0];
     
             let originalDateOneMonth = new Date(i.date); // Convert to Date object
@@ -77,21 +78,21 @@ function displayList(id){
             const oneMonth = originalDateOneMonth.toISOString().split("T")[0]; // Convert back to string
     
             let originalDateThreeMonth = new Date(i.date);
-            originalDateThreeMonth.setMonth(originalDateThreeMonth.getMonth() + 3);
-            const threeMonth = originalDateThreeMonth.toISOString().split("T")[0];
+            originalDateThreeMonth.setMonth(originalDateThreeMonth.getMonth() + 3);// Add 3 month
+            const threeMonth = originalDateThreeMonth.toISOString().split("T")[0];// Convert back to string
     
             let originalDateSixMonth = new Date(i.date);
-            originalDateSixMonth.setMonth(originalDateSixMonth.getMonth() + 6);
-            const sixMonth = originalDateSixMonth.toISOString().split("T")[0];
+            originalDateSixMonth.setMonth(originalDateSixMonth.getMonth() + 6);// Add 6 month
+            const sixMonth = originalDateSixMonth.toISOString().split("T")[0];// Convert back to string
     
             let originalDateOneYear = new Date(i.date);
-            originalDateOneYear.setMonth(originalDateOneYear.getMonth() + 12);
-            const oneYear = originalDateOneYear.toISOString().split("T")[0];
+            originalDateOneYear.setMonth(originalDateOneYear.getMonth() + 12);// Add 12 month whisch is one year
+            const oneYear = originalDateOneYear.toISOString().split("T")[0];// Convert back to string
             
             let arrDates = [sevenDays, oneMonth, threeMonth, sixMonth, oneYear];
             for(let n in arrDates){
                 const newObject = {topic: i.topic, date: arrDates[n]}
-                arrEvents.push(newObject);
+                arrEvents.push(newObject); // making an array of objects with revisie dates: 7 days- one month - 3months- 6month- one year and their topic
             }
             
         }
@@ -100,9 +101,9 @@ function displayList(id){
         for(let j of arrEvents){
             console.log(j.date)
             const today = new Date()
-            if(new Date(j.date) >= today){
+            if(new Date(j.date) >= today){ // checking if the time is passed or not , if not then it'll go through and create li
                 let li = document.createElement("li");
-                li.innerHTML = `${j.topic} - ${dateFormat(j.date)}`;
+                li.innerHTML = `${j.topic} - ${dateFormat(j.date)}`; // dateFormat() is for formatting date like 26th-May-2025
                 ulList.append(li);
             }
         }
