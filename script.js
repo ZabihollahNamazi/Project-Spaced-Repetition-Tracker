@@ -112,7 +112,11 @@ function displayList(id){
 }
 
 window.onload = function () {
-    clearData()
+    clearData(1)
+    clearData(2)
+    clearData(3)
+    clearData(4)
+    clearData(5)
 
     dropDown()
 };
