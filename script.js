@@ -9,6 +9,7 @@ import { dateFormat } from "./dateformat.js";
 
 document.getElementById("input-form").style.display = "none"; // set form hide as default
 
+let currentUserId = null;
 let datePickerDefault = document.getElementById("datePicker"); //set todays date as default in the date picker input
 datePickerDefault.value = new Date().toISOString().split('T')[0];
 
@@ -28,30 +29,28 @@ function dropDown(){
         document.getElementById("input-form").style.display = "block";
 
         let opt = dropDownList.options[dropDownList.selectedIndex];
-        let id = opt.id;
+        currentUserId = opt.id;
 
-        addDataLocal(id)
-        displayList(id)
+        displayList(currentUserId)
     
 })
 }
 
-function addDataLocal(id){
-    let topic = document.getElementById("topic");
-    let datePicker = document.getElementById("datePicker");
+function addDataLocal(){
     
-    let userId = id;
     let form = document.getElementById("input-form")
     form.addEventListener("submit", (e)=> {
-        e.preventDefault()
-        document.getElementById("ul-list").innerHTML= "";
-        
-        let data = {topic: topic.value, date: datePicker.value} // getting topic and date and put them into data object
-        console.log(data);
-        addData(userId, data); // add data to local storage
-        displayList(userId); // with userId it gets data from local storage and display them as list if agendas
+        e.preventDefault();
 
-        topic.value = ""; // empty the topic input after adding
+        let topicInput = document.getElementById("topic-input");
+        let datePicker = document.getElementById("datePicker");
+        
+        let data = {topic: topicInput.value, date: datePicker.value} // getting topic and date and put them into data object
+        console.log(data);
+        addData(currentUserId, data); // add data to local storage
+        displayList(currentUserId); // with userId it gets data from local storage and display them as list if agendas
+
+        topicInput.value = ""; // empty the topic input after adding
         datePicker.value = new Date().toISOString().split('T')[0]; // set as default date again
     })
     
@@ -59,8 +58,9 @@ function addDataLocal(id){
 
 function displayList(id){
     let ulList = document.getElementById("ul-list");
-    let userId = id;
-    const receivedData = getData(userId);
+    document.getElementById("ul-list").innerHTML= "";
+    const receivedData = getData(id);
+    console.log(receivedData,  "receive data line 64")
     let arrEvents = []; // we use it in line 94 for pushing the revises dates into it
     if(!receivedData){ // if receivedData from localStorage is empty then it shows to user that there is no agenda
         let li = document.createElement("li");
@@ -88,14 +88,16 @@ function displayList(id){
             let originalDateOneYear = new Date(i.date);
             originalDateOneYear.setMonth(originalDateOneYear.getMonth() + 12);// Add 12 month whisch is one year
             const oneYear = originalDateOneYear.toISOString().split("T")[0];// Convert back to string
-            
+            console.log(i, "checking receivedData item");
             let arrDates = [sevenDays, oneMonth, threeMonth, sixMonth, oneYear];
-            for(let n in arrDates){
+            for(let n = 0; n < arrDates.length; n++){
                 const newObject = {topic: i.topic, date: arrDates[n]}
+                console.log(newObject , "  line 94")
                 arrEvents.push(newObject); // making an array of objects with revisie dates: 7 days- one month - 3months- 6month- one year and their topic
             }
             
         }
+        console.log(arrEvents , "  befor filtering line 100")
         // Sort by date in ascending order (earliest date first)
         arrEvents.sort((a, b) => new Date(a.date) - new Date(b.date));
         for(let j of arrEvents){
@@ -112,6 +114,7 @@ function displayList(id){
 }
 
 window.onload = function () {
-
+    // clearData()
+    addDataLocal()
     dropDown()
 };
